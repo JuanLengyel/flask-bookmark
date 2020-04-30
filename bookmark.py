@@ -1,10 +1,11 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, flash
 from logging import DEBUG
 
 from user import User
 
 app = Flask(__name__)
 app.logger.setLevel(DEBUG)
+app.secret_key = '\xd3\xea\xeba\xe3c-2&1\xbd\x86\xf9X\xde\x02\xe1\xbd\x83\x9d\x81\xf5#\x11'
 
 @app.route('/')
 @app.route('/index')
@@ -20,6 +21,7 @@ def index():
 def add_bookmark():
   if request.method == 'POST':
     app.logger.debug('Request to add {0}'.format(request.form['book_url']))
+    flash('Stored bookmark: [{}]'.format(request.form['book_url']))
     return redirect(url_for('index'))
   if request.method == 'GET':
     return render_template('add.html')
