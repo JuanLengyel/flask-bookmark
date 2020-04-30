@@ -1,8 +1,10 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, redirect
+from logging import DEBUG
 
 from user import User
 
 app = Flask(__name__)
+app.logger.setLevel(DEBUG)
 
 @app.route('/')
 @app.route('/index')
@@ -14,9 +16,13 @@ def index():
     user=User('David', 'Hasslehof')
   )
 
-@app.route('/add')
+@app.route('/add', methods=['GET', 'POST'])
 def add_bookmark():
-  return render_template('add.html')
+  if request.method == 'POST':
+    app.logger.debug('Request to add {0}'.format(request.form['book_url']))
+    return redirect(url_for('index'))
+  if request.method == 'GET':
+    return render_template('add.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
